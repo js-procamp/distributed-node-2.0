@@ -1,49 +1,58 @@
-import { User } from './entities/user.entity';
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { Injectable, Logger, NotFoundException } from '@nestjs/common';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
+import IUsersService from './interfaces/IUsersService';
 
-import { v4 as uuid } from 'uuid';
+import { Model } from 'mongoose';
+import { User } from './schemas/user.schema';
+import { InjectModel } from '@nestjs/mongoose';
 
 @Injectable()
-export class UsersService {
-  private users: Array<User> = [];
+export class UsersService implements IUsersService {
+  private readonly logger = new Logger(UsersService.name);
 
-  create(createUserDto: CreateUserDto) {
-    const user = new User(
-      uuid(),
-      createUserDto.username,
-      createUserDto.password,
-    );
-    this.users.push(user);
-    return user;
+  constructor(@InjectModel(User.name) private userModel: Model<User>) {}
+
+  async create(createUserDto: CreateUserDto) {
+    try {
+      const user = new this.userModel(createUserDto);
+      return await user.save();
+    } catch (e) {
+      this.logger.error(e);
+      throw e;
+    }
   }
 
-  findAll() {
-    return this.users;
+  async findAll() {
+    return await this.userModel.find();
   }
 
-  findOne(id: string) {
-    return this.users.find((u) => u.id === id);
+  async findOne(id: string) {
+    return await this.userModel.findById(id);
   }
 
-  update(id: string, updateUserDto: UpdateUserDto) {
-    const user = this.findOne(id);
+  async update(id: string, updateUserDto: UpdateUserDto) {
+    const user = await this.findOne(id);
 
     if (!user) {
       throw new NotFoundException('Lol no user');
     }
 
-    user.password = updateUserDto.password ?? user.password;
+    user.email = updateUserDto.email ?? user.email;
     user.username = updateUserDto.username ?? user.username;
 
-    return user;
+    return await user.save();
   }
 
-  remove(id: string) {
-    return this.users.splice(
-      this.users.findIndex((u) => u.id === id),
-      1,
-    );
+  async remove(id: string) {
+    const user = await this.findOne(id);
+
+    if (!user) {
+      throw new NotFoundException('Lol no user');
+    }
+
+    await user.remove();
+
+    return id;
   }
 }

@@ -1,0 +1,79 @@
+// MongoDB Playground
+// To disable this template go to Settings | MongoDB | Use Default Template For Playground.
+// Make sure you are connected to enable completions and to be able to run a playground.
+// Use Ctrl+Space inside a snippet or a string literal to trigger completions.
+
+// Select the database to use.
+use('users');
+
+
+// 1 find all users with age >= 25 && age < 30, sort by age and color
+/*
+
+db.users.find({
+    $and: [
+        { 
+            age: { $gte: 25 }
+        },
+        {
+            age: { $lt: 30 }
+        }
+    ]
+})
+.sort({ age: 1, eyeColor: 1 });
+
+*/
+
+// 2 find users with eye color brown or blue
+/*
+db.users.find({
+    // $or: [
+    //     { 
+    //         eyeColor: "brown"
+    //     },
+    //     {
+    //         eyeColor: "blue"
+    //     }
+    // ]
+    eyeColor: {
+        $in: ["brown", "blue"]
+    }
+})
+*/
+
+// 3. Find users with name starts with Bl
+
+/*
+db.users.find({
+    name: /[A-Za-z]{7,}\s/
+})
+*/
+
+// 4. Find all balance of 2 groups users: male/female for active users
+
+db.users.aggregate([
+    { /**
+     * query: The query in MQL.
+     */
+        $match: {
+            isActive: true
+        } 
+    },
+    {
+        /**
+         * _id: The id of the group.
+         * fieldN: The first field name.
+         */
+        $group: {
+          _id: "$gender",
+          total: {
+            $avg: "$balance"
+          }
+        }
+    }
+]);
+
+
+
+
+

@@ -6,14 +6,18 @@ import {
   Patch,
   Param,
   Delete,
+  Inject,
 } from '@nestjs/common';
-import { UsersService } from './users.service';
+
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
+import IUsersService from './interfaces/IUsersService';
 
 @Controller('users')
 export class UsersController {
-  constructor(private readonly usersService: UsersService) {}
+  constructor(
+    @Inject('IUsersService') private readonly usersService: IUsersService,
+  ) {}
 
   @Post()
   create(@Body() createUserDto: CreateUserDto) {
@@ -22,6 +26,11 @@ export class UsersController {
 
   @Get()
   findAll() {
+    let a = 1;
+    a++;
+    a++;
+    let b = 2;
+    b = a + b;
     return this.usersService.findAll();
   }
 
