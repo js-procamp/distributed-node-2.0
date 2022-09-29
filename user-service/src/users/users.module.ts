@@ -1,8 +1,10 @@
 import { MongooseModule } from '@nestjs/mongoose';
-import { Module } from '@nestjs/common';
+import { CacheModule, Module } from '@nestjs/common';
 import { UsersService } from './users.service';
 import { UsersController } from './users.controller';
 import { User, UserSchema } from './schemas/user.schema';
+
+import * as redis from 'cache-manager-ioredis';
 
 @Module({
   imports: [
@@ -12,6 +14,12 @@ import { User, UserSchema } from './schemas/user.schema';
         schema: UserSchema,
       },
     ]),
+    CacheModule.register({
+      store: redis,
+      host: process.env.REDIS_HOST,
+      port: process.env.REDIS_PORT,
+      ttl: 0,
+    }),
   ],
   controllers: [UsersController],
   providers: [
