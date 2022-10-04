@@ -101,11 +101,11 @@ const Chat = () => {
 		});
 
 		chat.on('userConnected', user => {
-			setActiveUsers(u => u.concat(user.nick));
+			setActiveUsers(u => u.concat(user));
 		});
 
 		chat.on('userDisconnected', user => {
-			setActiveUsers(u => u.filter(name => name !== user.nick));
+			setActiveUsers(u => u.filter(name => name !== user));
 		});
 
 		chat.on('activeUsers', users => {
