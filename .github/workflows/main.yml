@@ -1,4 +1,4 @@
-# This workflow will do a clean installation of node dependencies, cache/restore them, build the source code and run tests across different versions of node
+# This workflow will do a clean install of node dependencies, build the source code and run tests across different versions of node
 # For more information see: https://help.github.com/actions/language-and-framework-guides/using-nodejs-with-github-actions
 
 name: Build and Deploy
@@ -10,7 +10,7 @@ on:
     branches: [ "main" ]
 
 jobs:
-  build:
+  tests:
 
     runs-on: ubuntu-latest
 
@@ -41,12 +41,12 @@ jobs:
       run: yarn test
       working-directory: ./user-service
 
-  deploy:
+  deploy-user-service:
     if: github.event_name == 'push'
 
     runs-on: ubuntu-latest
     # only run if build job complte successfully 
-    needs: [build]
+    needs: [tests]
 
     strategy:
       matrix:
@@ -62,8 +62,60 @@ jobs:
         docker login -u ${{secrets.DOCKER_HUB_USERNAME}} -p ${{secrets.DOCKER_HUB_PASSWORD}}
   
     - name: Build the Docker image
-      run: docker build ./user-service --file ./user-service/Dockerfile --tag innaifox/jsprocamp-user-service:latest
+      run: docker build ./user-service --file ./user-service/Dockerfile --tag iivashchuk/jsprocamp-user-service-2:latest
       
     - name: Docker Push
-      run: docker push innaifox/jsprocamp-user-service:latest
+      run: docker push iivashchuk/jsprocamp-user-service-2
 
+  deploy-chat-service:
+    if: github.event_name == 'push'
+
+    runs-on: ubuntu-latest
+    # only run if build job complte successfully 
+    needs: [tests]
+
+    strategy:
+      matrix:
+        node-version: [16.x]
+
+    steps:
+    - uses: actions/checkout@v3
+    - name: Docker login
+      env:
+        DOCKER_USER: ${{secrets.DOCKER_HUB_USERNAME}}
+        DOCKER_PASSWORD: ${{secrets.DOCKER_HUB_PASSWORD}}
+      run: |
+        docker login -u ${{secrets.DOCKER_HUB_USERNAME}} -p ${{secrets.DOCKER_HUB_PASSWORD}}
+  
+    - name: Build the Docker image
+      run: docker build ./chat-service --file ./chat-service/Dockerfile --tag iivashchuk/jsprocamp-chat-service-2:latest
+      
+    - name: Docker Push
+      run: docker push iivashchuk/jsprocamp-chat-service-2
+
+  deploy-chat-client:
+    if: github.event_name == 'push'
+
+    runs-on: ubuntu-latest
+    # only run if build job complte successfully 
+    needs: [tests]
+
+    strategy:
+      matrix:
+        node-version: [16.x]
+
+    steps:
+    - uses: actions/checkout@v3
+    - name: Docker login
+      env:
+        DOCKER_USER: ${{secrets.DOCKER_HUB_USERNAME}}
+        DOCKER_PASSWORD: ${{secrets.DOCKER_HUB_PASSWORD}}
+      run: |
+        docker login -u ${{secrets.DOCKER_HUB_USERNAME}} -p ${{secrets.DOCKER_HUB_PASSWORD}}
+  
+    - name: Build the Docker image
+      run: docker build ./client-app --file ./client-app/Dockerfile --tag iivashchuk/jsprocamp-client-app-2:latest
+      
+
+    - name: Docker Push
+      run: docker push iivashchuk/jsprocamp-client-app-2
