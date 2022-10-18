@@ -62,10 +62,10 @@ jobs:
         docker login -u ${{secrets.DOCKER_HUB_USERNAME}} -p ${{secrets.DOCKER_HUB_PASSWORD}}
   
     - name: Build the Docker image
-      run: docker build ./user-service --file ./user-service/Dockerfile --tag innaifox/jsprocamp-user-service-2:latest
+      run: docker build ./user-service --file ./user-service/Dockerfile --tag innaifox/jsprocamp-user-service:latest
       
     - name: Docker Push
-      run: docker push innaifox/jsprocamp-user-service-2
+      run: docker push innaifox/jsprocamp-user-service
 
   deploy-chat-service:
     if: github.event_name == 'push'
@@ -88,10 +88,10 @@ jobs:
         docker login -u ${{secrets.DOCKER_HUB_USERNAME}} -p ${{secrets.DOCKER_HUB_PASSWORD}}
   
     - name: Build the Docker image
-      run: docker build ./chat-service --file ./chat-service/Dockerfile --tag innaifox/jsprocamp-chat-service-2:latest
+      run: docker build ./chat-service --file ./chat-service/Dockerfile --tag innaifox/jsprocamp-chat-service:latest
       
     - name: Docker Push
-      run: docker push innaifox/jsprocamp-chat-service-2
+      run: docker push innaifox/jsprocamp-chat-service
 
   deploy-chat-client:
     if: github.event_name == 'push'
@@ -114,8 +114,8 @@ jobs:
         docker login -u ${{secrets.DOCKER_HUB_USERNAME}} -p ${{secrets.DOCKER_HUB_PASSWORD}}
   
     - name: Build the Docker image
-      run: docker build ./client-app --file ./client-app/Dockerfile --tag innaifox/jsprocamp-client-app-2:latest
+      run: docker build ./client-app --file ./client-app/Dockerfile --tag innaifox/jsprocamp-client-app:latest
       
 
     - name: Docker Push
-      run: docker push innaifox/jsprocamp-client-app-2
+      run: docker push innaifox/jsprocamp-client-app
