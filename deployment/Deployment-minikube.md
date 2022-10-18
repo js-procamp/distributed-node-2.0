@@ -1,6 +1,6 @@
 # Local k8s deployment using Minikube
 
-## First, you need to start Minikube locally
+## First of all, start the Minikube locally
 
 ```bash
 minikube config set vm-driver kvm2
@@ -8,6 +8,8 @@ minikube status
 minikube start --kubernetes-version v1.14.7 --cpus 4 --memory 8000 --vm-driver=kvm2
 minikube tunnel
 ```
+
+Note: I would suggest to do it in a separate terminal, cause process after the last command should not be stopped until k8s in use
 
 ## The next step is to run k8s services
 
@@ -39,4 +41,10 @@ default       my-mongo-mongodb    ClusterIP   10.97.255.74     <none>        270
 default       my-redis-headless   ClusterIP   None             <none>        6379/TCP                 54s
 default       my-redis-master     ClusterIP   10.106.121.163   <none>        6379/TCP                 54s
 default       my-redis-slave      ClusterIP   10.101.70.69     <none>        6379/TCP                 54s
+```
+
+## To shutdown k8s pods
+
+```bash
+./shutdown-local.sh
 ```

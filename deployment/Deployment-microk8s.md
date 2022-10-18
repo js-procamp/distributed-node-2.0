@@ -4,7 +4,7 @@ MicroK8s is a low-ops, minimal production Kubernetes.
 
 MicroK8s is an open-source system for automating deployment, scaling, and management of containerised applications. It provides the functionality of core Kubernetes components, in a small footprint, scalable from a single node to a high-availability production cluster.
 
-Developed with Canonical, so best compatibility and user experience with ubuntu
+Developed with Canonical, so best compatibility and user experience with Ubuntu
 
 More details: https://microk8s.io/docs 
 
@@ -14,15 +14,15 @@ Please follow instructions: https://microk8s.io/docs/getting-started
 
 ## The next step is to run k8s services
 
-Go to deployment > scripts and run deploy-local.sh script, but before that be sure to add permissions to sh scripts:
+Go to deployment > scripts and run deploy-local-microk8s.sh script, but before that be sure to add permissions to sh scripts:
 
 ```bash
-chmod +x deploy-local-k8s.sh
-chmod +x shutdown-local-k8s.sh
+chmod +x deploy-local-microk8s.sh
+chmod +x shutdown-local-microk8s.sh
 ```
 
 ```bash
-./deploy-local-k8s.sh
+./deploy-local-microk8s.sh
 ```
 
 ## The next step is to check, if k8s services running and get IPs
@@ -42,4 +42,10 @@ default       my-mongo-mongodb    ClusterIP   10.97.255.74     <none>        270
 default       my-redis-headless   ClusterIP   None             <none>        6379/TCP                 54s
 default       my-redis-master     ClusterIP   10.106.121.163   <none>        6379/TCP                 54s
 default       my-redis-slave      ClusterIP   10.101.70.69     <none>        6379/TCP                 54s
+```
+
+## To shutdown k8s pods
+
+```bash
+./shutdown-local-microk8s.sh
 ```
