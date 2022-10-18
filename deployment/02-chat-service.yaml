@@ -21,7 +21,7 @@ spec:
           image: innaifox/jsprocamp-chat-service
           env:
             - name: PORT
-              value: 8000
+              value: "8000"
           ports:
             - name: web
               containerPort: 3001
