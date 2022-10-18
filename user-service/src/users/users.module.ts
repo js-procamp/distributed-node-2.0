@@ -18,6 +18,7 @@ import * as redis from 'cache-manager-ioredis';
       store: redis,
       host: process.env.REDIS_HOST,
       port: process.env.REDIS_PORT,
+      password: process.env.REDIS_PASSWORD,
       ttl: 0,
     }),
   ],
